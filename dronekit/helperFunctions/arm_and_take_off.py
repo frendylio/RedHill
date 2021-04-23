@@ -62,7 +62,19 @@ def main():
         print ("Error, unable to connect to vehicle")
 
     else:
-        arm_and_takeoff(vehicle, 1)
+        arm_and_takeoff(vehicle, 3)
+        while True:
+            user_input = raw_input('RTL vehicle?: ')
+            break
+        print('Return to launch')
+        vehicle.mode = VehicleMode("RTL")
+        while vehicle.mode != 'RTL':
+            print("Waiting for drone to enter RTL flight mode")
+            time.sleep(1)
+        print ("Vehicle now in RTL MODE")
+        while True:
+            user_input = raw_input('Close vehicle?: ')
+            break
 
     # Do not forget so we can clean/flush vehicle
     # About to exit script
@@ -71,4 +83,5 @@ def main():
 
     return
 
-main()
+if __name__ == "__main__":
+    main()

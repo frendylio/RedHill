@@ -6,6 +6,9 @@ from Mission_Helper import *
 import time
 from pymavlink import mavutil
 
+# QGC WPL <VERSION>
+#  <INDEX> <CURRENT WP> <COORD FRAME> <COMMAND> <PARAM1> <PARAM2> <PARAM3> <PARAM4> <PARAM5/X/LATITUDE> <PARAM6/Y/LONGITUDE> <PARAM7/Z/ALTITUDE> <AUTOCONTINUE>
+
 def main():
     vehicle = connect_to_vehicle()
 
@@ -15,19 +18,27 @@ def main():
     else:
         # Arm vehicle first, this is so wecanensure hoome_Location is set
         # (To save WayPoint files)
-        while not vehicle.is_armable:
-            print(" Waiting for vehicle to initialise...")
-            time.sleep(1)
+        # while not vehicle.is_armable:
+        #     print(" Waiting for vehicle to initialise...")
+        #     time.sleep(1)
+        arm_and_takeoff(vehicle, 10)
 
         # Imporitingor exporting
-        import_mission_filename = 'resources/mpmission.txt'
-        export_mission_filename = 'resources/exportedmission.txt'
+        import_mission_filename = 'resources/test.txt'
 
         #Upload mission from file
         upload_mission(import_mission_filename,vehicle,import_mission_filename)
 
-        #Download mission we just uploaded and save to a file
-        save_mission(export_mission_filename, vehicle)
+        # missionlist = vehicle.commands
+        # for x in missionlist:
+        #     print(x)
+
+        print("Setting AUTO mode...")
+        vehicle.mode = VehicleMode("AUTO")
+        while vehicle.mode != 'AUTO':
+            print("Waiting for drone to enter AUTO flight mode")
+            time.sleep(1)
+        print ("Vehicle now in AUTO MODE")        
 
         while True:
             user_input = raw_input('Close vehicle?: ')
@@ -38,12 +49,7 @@ def main():
     print ("Closing Vehicle")
     vehicle.close()
 
-    print("\nShow original and uploaded/downloaded files:")
-    #Print original file (for demo purposes only)
-    printfile(import_mission_filename)
-    #Print exported file (for demo purposes only)
-    printfile(export_mission_filename)
-
     return
 
-main()
+if __name__ == "__main__":
+    main()

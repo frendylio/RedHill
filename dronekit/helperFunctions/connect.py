@@ -2,7 +2,7 @@ from dronekit import connect, APIException
 import argparse
 import socket
 import exceptions
-
+#mavproxy.py --master=udp:0.0.0.0:14550 --map --console
 def connect_to_vehicle():
     parser = argparse.ArgumentParser(description='commands')
     # Option would be called --connect -> specify IP address and catch and save in variable called args
@@ -68,3 +68,6 @@ def main():
     vehicle.close()
 
     return 
+    
+if __name__ == "__main__":
+    main()
